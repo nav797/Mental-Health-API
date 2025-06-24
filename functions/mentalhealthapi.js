@@ -54,7 +54,7 @@ app.use((req, res, next) => {
   }
 });
 
-//app.use("/.netlify/functions/stockinformation", router);
+//app.use("/.netlify/functions/mentalhealthapi", router);
 app.use("/", router);
 
 //module.exports.handler = serverless(app);
