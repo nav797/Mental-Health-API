@@ -4,39 +4,20 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const app = express();
 const router = express.Router();
+const affirmations = require("./affirmations");
+
+const headers = {
+  "User-Agent":
+    "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36",
+};
 
 router.get("/", (req, res) => {
   res.json("Welcome to the Mental Health and Wellness API");
 });
 
-router.get("/affirmation/", (req, res) => {
-  const symbol = req.params.symbol;
-
-  const url =
-    "https://www.louisehay.com/101-best-louise-hay-positive-affirmations/";
-
-  axios
-    .get(url)
-    .then((response) => {
-      const html = response.data;
-      const $ = cheerio.load(html);
-      const affirmations = [];
-
-      $("ol li").each((_, el) => {
-        const text = $(el).text().trim();
-        if (text) affirmations.push(text);
-      });
-
-      const random =
-        affirmations[Math.floor(Math.random() * affirmations.length)];
-      res.json({ affirmation: random });
-    })
-    .catch((err) => {
-      console.error("Scraping failed:", err.message);
-      res
-        .status(500)
-        .json({ error: "Scraping failed. Please try again later." });
-    });
+app.get("/affirmation", (req, res) => {
+  const random = affirmations[Math.floor(Math.random() * affirmations.length)];
+  res.json({ affirmation: random });
 });
 
 app.use((req, res, next) => {
