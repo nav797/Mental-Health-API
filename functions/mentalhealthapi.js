@@ -6,18 +6,73 @@ const app = express();
 const router = express.Router();
 const affirmations = require("./affirmations");
 
-const headers = {
-  "User-Agent":
-    "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36",
-};
+const fs = require("fs");
+
+const affirmationsData = JSON.parse(
+  fs.readFileSync("affirmations.json", "utf-8")
+);
+const allAffirmations = affirmationsData.flatMap((theme) => theme.affirmations);
 
 router.get("/", (req, res) => {
   res.json("Welcome to the Mental Health and Wellness API");
 });
 
-app.get("/affirmation", (req, res) => {
-  const random = affirmations[Math.floor(Math.random() * affirmations.length)];
-  res.json({ affirmation: random });
+// get random affirmation from list
+app.get("/affirmations/random", (req, res) => {
+  const randomAffirmation =
+    allAffirmations[Math.floor(Math.random() * allAffirmations.length)];
+  res.json({ affirmation: randomAffirmation });
+});
+
+//get all themes
+app.get("/affirmations/themes", (req, res) => {
+  const themes = affirmationsData.map((item) => item.theme);
+  res.json({ themes });
+});
+
+// get random affirmation from paticular theme
+app.get("/affirmations/random/:theme", (req, res) => {
+  const theme = req.params.theme;
+  const themeData = affirmationsData.find(
+    (item) => item.theme.toLowerCase() === theme.toLowerCase()
+  );
+
+  if (!themeData) {
+    return res.status(404).json({ error: "Theme not found" });
+  }
+
+  // Get a random affirmation from the theme
+  const randomAffirmation =
+    themeData.affirmations[
+      Math.floor(Math.random() * themeData.affirmations.length)
+    ];
+
+  res.json({ theme: themeData.theme, affirmation: randomAffirmation });
+});
+
+app.get("/affirmations/search", (req, res) => {
+  const query = req.query.query;
+  if (!query) {
+    return res.status(400).json({ error: "Query parameter is required." });
+  }
+
+  const results = [];
+
+  affirmationsData.forEach((themeObj) => {
+    themeObj.affirmations.forEach((affirmation) => {
+      if (affirmation.toLowerCase().includes(query.toLowerCase())) {
+        results.push(affirmation);
+      }
+    });
+  });
+
+  if (results.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "No affirmations found matching your query." });
+  }
+
+  res.json({ query, affirmations: results });
 });
 
 app.use((req, res, next) => {
