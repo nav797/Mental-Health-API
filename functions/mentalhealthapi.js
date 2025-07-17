@@ -6,9 +6,8 @@ const router = express.Router();
 
 const fs = require("fs");
 
-const affirmationsData = JSON.parse(
-  fs.readFileSync(__dirname + "/affirmations.json", "utf-8")
-);
+const affirmationsPath = path.join(__dirname, "affirmations.json");
+const affirmationsData = JSON.parse(fs.readFileSync(affirmationsPath, "utf-8"));
 const allAffirmations = affirmationsData.flatMap((theme) => theme.affirmations);
 
 router.get("/", (req, res) => {
