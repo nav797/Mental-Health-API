@@ -15,20 +15,20 @@ router.get("/", (req, res) => {
 });
 
 // get random affirmation from list
-app.get("/affirmations/random", (req, res) => {
+router.get("/affirmations/random", (req, res) => {
   const randomAffirmation =
     allAffirmations[Math.floor(Math.random() * allAffirmations.length)];
   res.json({ affirmation: randomAffirmation });
 });
 
 //get all themes
-app.get("/affirmations/themes", (req, res) => {
+router.get("/affirmations/themes", (req, res) => {
   const themes = affirmationsData.map((item) => item.theme);
   res.json({ themes });
 });
 
 // get random affirmation from paticular theme
-app.get("/affirmations/random/:theme", (req, res) => {
+router.get("/affirmations/random/:theme", (req, res) => {
   const theme = req.params.theme;
   const themeData = affirmationsData.find(
     (item) => item.theme.toLowerCase() === theme.toLowerCase()
@@ -47,7 +47,7 @@ app.get("/affirmations/random/:theme", (req, res) => {
   res.json({ theme: themeData.theme, affirmation: randomAffirmation });
 });
 
-app.get("/affirmations/search", (req, res) => {
+router.get("/affirmations/search", (req, res) => {
   const query = req.query.query;
   if (!query) {
     return res.status(400).json({ error: "Query parameter is required." });
