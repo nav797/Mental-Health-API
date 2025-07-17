@@ -4,7 +4,6 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const app = express();
 const router = express.Router();
-const affirmations = require("./affirmations");
 
 const fs = require("fs");
 
@@ -14,7 +13,7 @@ const affirmationsData = JSON.parse(
 const allAffirmations = affirmationsData.flatMap((theme) => theme.affirmations);
 
 router.get("/", (req, res) => {
-  res.json("Welcome to the Mental Health and Wellness API");
+  res.json("Welcome to the Affirmations API");
 });
 
 // get random affirmation from list
