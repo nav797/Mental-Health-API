@@ -7,7 +7,7 @@ const router = express.Router();
 const fs = require("fs");
 
 const affirmationsData = JSON.parse(
-  fs.readFileSync(__dirname + "affirmations.json", "utf-8")
+  fs.readFileSync(__dirname + "/affirmations.json", "utf-8")
 );
 const allAffirmations = affirmationsData.flatMap((theme) => theme.affirmations);
 
