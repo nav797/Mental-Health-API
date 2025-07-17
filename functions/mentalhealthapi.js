@@ -89,13 +89,6 @@ app.use((req, res, next) => {
   }
 });
 
-//app.use("/.netlify/functions/mentalhealthapi", router);
-app.use("/", router);
+app.use("/.netlify/functions/mentalhealthapi", router);
 
-//module.exports.handler = serverless(app);
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
-
-//remove commented code from below for local testing
-//module.exports = router;
+module.exports.handler = serverless(app);
